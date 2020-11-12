@@ -1,5 +1,5 @@
 #!/bin/bash
-PACKAGE=$1
+PACKAGE="witch"
 SRC_PATH="./src/main/kotlin/${PACKAGE}"
 IGNORED="shared,${PACKAGE}"
 OUT_FIXED="out/${PACKAGE}.kt"

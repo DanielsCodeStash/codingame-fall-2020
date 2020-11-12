@@ -1,5 +1,5 @@
-package lifegame.container
+package witch.container
 
 enum class ActionType {
-    CONNECT, GOTO, WAIT, NONE
+    BREW, CAST, REST, WAIT
 }
