@@ -8,6 +8,7 @@ fun readRoundState(input: Scanner) : RoundState {
     val brews = mutableListOf<Brew>()
     val mySpells = mutableListOf<Spell>()
     val enemySpells = mutableListOf<Spell>()
+    val tomes = mutableListOf<Tome>()
 
     val actionCount = input.nextInt()
     for (i in 0 until actionCount) {
@@ -26,10 +27,17 @@ fun readRoundState(input: Scanner) : RoundState {
         val castable = input.nextInt() != 0 // in the first league: always 0; later: 1 if this is a castable player spell
         val repeatable = input.nextInt() != 0 // for the first two leagues: always 0; later: 1 if this is a repeatable player spell
 
+        var spell: Spell? = null
+
+        when(actionType) {
+            "CAST", "OPPONENT_CAST", "LEARN" -> spell = Spell(actionId, delta0, delta1, delta2, delta3, !castable, repeatable)
+        }
+
         when(actionType) {
             "BREW" -> brews.add(Brew(actionId, delta0*-1, delta1*-1, delta2*-1, delta3*-1, price))
-            "CAST" -> mySpells.add(Spell(actionId, delta0, delta1, delta2, delta3, !castable))
-            "OPPONENT_CAST " -> mySpells.add(Spell(actionId, delta0, delta1, delta2, delta3, !castable))
+            "CAST" -> mySpells.add(spell!!)
+            "OPPONENT_CAST " -> mySpells.add(spell!!)
+            "LEARN" -> tomes.add(Tome(spell!!, tomeIndex, taxCount))
         }
     }
 
@@ -59,6 +67,6 @@ fun readRoundState(input: Scanner) : RoundState {
     val me = Witch(myScore, myInventory!!, mySpells)
     val enemy = Witch(enemyScore, enemyInventory!!, enemySpells)
 
-    return RoundState(brews, me, enemy)
+    return RoundState(brews, tomes, me, enemy)
 
 }

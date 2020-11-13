@@ -1,5 +1,5 @@
 package witch.container
 
 enum class ActionType {
-    BREW, CAST, REST, WAIT
+    BREW, CAST, REST, WAIT, LEARN
 }

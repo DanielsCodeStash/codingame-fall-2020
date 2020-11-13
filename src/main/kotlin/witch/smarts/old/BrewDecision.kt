@@ -1,9 +1,7 @@
-package witch.smarts
+package witch.smarts.old
 
 import witch.container.*
-import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.HashSet
 
 class BrewDecision {
 
@@ -57,15 +55,15 @@ class BrewDecision {
                         val newActionPath = node.madeActions + Action(ActionType.CAST, castSpell.id)
                         val newSpells = node.spells.map {
                             if(it.id == castSpell.id)
-                                Spell(it.id, it.delta0, it.delta1, it.delta2, it.delta3, true)
+                                Spell(it.id, it.delta0, it.delta1, it.delta2, it.delta3, true, it.repeatable)
                             else
-                                Spell(it.id, it.delta0, it.delta1, it.delta2, it.delta3, it.isExhausted)
+                                Spell(it.id, it.delta0, it.delta1, it.delta2, it.delta3, it.isExhausted, it.repeatable)
                         }
                         potentialNodes.add(SpellNode(newInventory, newSpells, brew, newActionPath, node.depth + 1))
                     }
 
             if(node.spells.any{it.isExhausted}) {
-                val restedSpells = node.spells.map { Spell(it.id, it.delta0, it.delta1, it.delta2, it.delta3, false) }
+                val restedSpells = node.spells.map { Spell(it.id, it.delta0, it.delta1, it.delta2, it.delta3, false, it.repeatable) }
                 val newActionPath = node.madeActions + Action(ActionType.REST)
                 potentialNodes.add(SpellNode(node.inventory, restedSpells, node.brew, newActionPath, node.depth + 1))
             }

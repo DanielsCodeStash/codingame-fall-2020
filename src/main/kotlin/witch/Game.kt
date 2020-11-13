@@ -1,6 +1,6 @@
 package witch
 import witch.container.Action
-import witch.smarts.BrewDecision
+import witch.smarts.old.BrewDecision
 import witch.util.readRoundState
 import java.util.*
 
