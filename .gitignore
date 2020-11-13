@@ -1,1 +1,19 @@
 /codingame-fall-2020.iml
+target/
+
+out/*kt
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache

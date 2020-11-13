@@ -28,8 +28,8 @@ fun readRoundState(input: Scanner) : RoundState {
 
         when(actionType) {
             "BREW" -> brews.add(Brew(actionId, delta0*-1, delta1*-1, delta2*-1, delta3*-1, price))
-            "CAST" -> mySpells.add(Spell(actionId, delta0, delta1, delta2, delta3, castable))
-            "OPPONENT_CAST " -> mySpells.add(Spell(actionId, delta0, delta1, delta2, delta3, castable))
+            "CAST" -> mySpells.add(Spell(actionId, delta0, delta1, delta2, delta3, !castable))
+            "OPPONENT_CAST " -> mySpells.add(Spell(actionId, delta0, delta1, delta2, delta3, !castable))
         }
     }
 

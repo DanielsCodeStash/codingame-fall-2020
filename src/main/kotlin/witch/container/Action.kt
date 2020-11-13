@@ -5,6 +5,9 @@ data class Action(val verb: ActionType, val thing: String) {
     constructor(verb: ActionType) : this(verb, "")
 
     override fun toString(): String {
-        return "$verb $thing"
+        return if(thing == "")
+            "$verb"
+        else
+            "$verb $thing"
     }
 }
