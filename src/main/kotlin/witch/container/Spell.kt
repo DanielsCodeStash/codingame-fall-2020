@@ -18,10 +18,16 @@ data class Spell(
         }
         throw RuntimeException("Faulty tier")
     }
+
     fun neededTiers(): List<Int> {
         return getTierNums().filter { deltaForTier(it) < 0 }
     }
+
     fun producedTiers(): List<Int> {
         return getTierNums().filter { deltaForTier(it) > 0 }
+    }
+
+    fun debugString(): String {
+        return "S(#$id [$delta0 $delta1 $delta2 $delta3] $isExhausted $repeatable)"
     }
 }

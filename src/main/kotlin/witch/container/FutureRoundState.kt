@@ -1,6 +1,6 @@
 package witch.container
 
 class FutureRoundState (
-        roundState: RoundState,
-        path: List<Action>
+        val roundState: RoundState,
+        val path: List<Action>
 )

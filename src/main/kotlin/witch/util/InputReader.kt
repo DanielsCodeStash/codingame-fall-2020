@@ -3,7 +3,7 @@ package witch.util
 import witch.container.*
 import java.util.*
 
-fun readRoundState(input: Scanner) : RoundState {
+fun readRoundState(input: Scanner, roundNum: Int) : RoundState {
 
     val brews = mutableListOf<Brew>()
     val mySpells = mutableListOf<Spell>()
@@ -67,6 +67,6 @@ fun readRoundState(input: Scanner) : RoundState {
     val me = Witch(myScore, myInventory!!, mySpells)
     val enemy = Witch(enemyScore, enemyInventory!!, enemySpells)
 
-    return RoundState(brews, tomes, me, enemy)
+    return RoundState(roundNum, brews, tomes, me, enemy)
 
 }

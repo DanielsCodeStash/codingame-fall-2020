@@ -17,4 +17,9 @@ data class Brew(
         }
         throw RuntimeException("Faulty tier")
     }
+
+    fun debugString(): String {
+        return "B(#$id [$costTier0 $costTier1 $costTier2 $costTier3] $price)"
+    }
+
 }

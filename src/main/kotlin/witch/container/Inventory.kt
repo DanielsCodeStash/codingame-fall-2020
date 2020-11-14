@@ -18,6 +18,14 @@ data class Inventory(
 
     fun totalNumIngredients() = getTierNums().map { getNumOfTier(it) }.sum()
 
+    fun getInventoryAfterSpellCast(spell: Spell, times: Int): Inventory {
+        var inventory = this
+        for(i in 1..times) {
+            inventory = getInventoryAfterSpellCast(spell)
+        }
+        return inventory
+    }
+
     fun getInventoryAfterSpellCast(spell: Spell): Inventory {
         val newInventory = Inventory(
                 tier0 + spell.delta0,
@@ -33,7 +41,16 @@ data class Inventory(
         return newInventory
     }
 
-    fun toDebugString(): String {
-        return "Inventory ($tier0, $tier1, $tier2, $tier3)"
+    fun getInventoryAfterBrewing(brew: Brew): Inventory {
+        return Inventory(
+                tier0 - brew.costTier0,
+                tier1 - brew.costTier1,
+                tier2 - brew.costTier2,
+                tier3 - brew.costTier3
+        )
+    }
+
+    fun debugString(): String {
+        return "I($tier0 $tier1 $tier2 $tier3)"
     }
 }
