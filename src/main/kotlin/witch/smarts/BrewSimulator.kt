@@ -35,7 +35,7 @@ class BrewSimulator(timer: TimerHomie) {
             val newBrewList = state.roundState.brews.filter { it.id != brew.id }
             val newInventory = state.roundState.me.inventory.getInventoryAfterBrewing(brew)
 
-            val newMe = state.roundState.me.copy(inventory = newInventory)
+            val newMe = state.roundState.me.copy(inventory = newInventory, score = state.roundState.me.score + brew.price)
 
             val newRoundState = state.roundState.copy(me = newMe, brews = newBrewList, round = state.roundState.round + 1)
 
@@ -58,6 +58,7 @@ class BrewSimulator(timer: TimerHomie) {
             val newRoundState = state.roundState.copy(me = newMe, tomes = newTomeList, round = state.roundState.round + 1)
 
             return FutureRoundState(newRoundState, newPath)
+
         } else if(action.verb == ActionType.REST) {
 
             val newSpellList = state.roundState.me.spells.map { it.copy(isExhausted = false) }
@@ -85,7 +86,7 @@ class BrewSimulator(timer: TimerHomie) {
         state.me.spells
                 .filter { it.repeatable }
                 .forEach { spell ->
-                    for(i in 0..numberOfTimesSpellCanBeCast(spell, state.me.inventory)) {
+                    for(i in 1..numberOfTimesSpellCanBeCast(spell, state.me.inventory)) {
                         castsMultiple.add(Action(ActionType.CAST, spell.id, i))
                     }
                 }
@@ -94,8 +95,10 @@ class BrewSimulator(timer: TimerHomie) {
                 .filter { canLearn(it, state.me.inventory) }
                 .map { Action(ActionType.LEARN, it.spell.id) }
 
+        val rest = if(state.me.spells.any { it.isExhausted }) listOf(Action(ActionType.REST)) else emptyList()
 
-        return listOf(brews, castsSingle, castsMultiple, learn).flatten()
+
+        return listOf(brews, castsSingle, castsMultiple, learn, rest).flatten()
     }
 
     private fun numberOfTimesSpellCanBeCast(spell: Spell, inventory: Inventory): Int {
@@ -126,8 +129,13 @@ class BrewSimulator(timer: TimerHomie) {
             return false
         }
 
+        val inventoryAfterCast = inventory.getInventoryAfterSpellCast(spell)
+
+        val noneUnderZero = getTierNums().none { inventoryAfterCast.getNumOfTier(it) < 0 }
+
         // of the needed tiers, is there any where we don't have enough? if so we can't cast
-       return !spell.neededTiers().any { inventory.getNumOfTier(it) < spell.deltaForTier(it) * -1 }
+       // val haveEnoughToCast = !spell.neededTiers().any { inventory.getNumOfTier(it) < spell.deltaForTier(it) * -1 }
+        return noneUnderZero && inventoryAfterCast.getTotalSize() <= 10
     }
 
 }

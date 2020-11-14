@@ -1,9 +1,12 @@
 package witch.smarts
 
 import witch.container.FutureRoundState
+import witch.util.InfoKeeper
 import witch.util.TimerHomie
 
-data class DepthKeeper(val timer: TimerHomie) {
+data class DepthKeeper(val timer: TimerHomie, val info: InfoKeeper) {
+
+    private val maxCandidatesPerLevel = 200
 
     private var activeLevel = 0
     private var activeIndex = 0
@@ -18,10 +21,23 @@ data class DepthKeeper(val timer: TimerHomie) {
     fun initiateNextLevel() {
         activeLevel++
         activeIndex = 0
-        currentLevel = if(nextLevel.size > 100) nextLevel.subList(0, 100) else nextLevel
+        switchNextAndCurrent()
         nextLevel = mutableListOf()
 
-        System.err.println("Depth $activeLevel size: ${currentLevel.size}")
+        info.reportDepth(activeLevel, currentLevel.size)
+    }
+
+    private fun switchNextAndCurrent() {
+
+        currentLevel = if(nextLevel.size > maxCandidatesPerLevel) {
+            nextLevel
+                    .sortedByDescending { it.score }
+                    .subList(0, maxCandidatesPerLevel)
+
+
+        } else {
+            nextLevel
+        }
     }
 
     fun queueFutureState(state: FutureRoundState) {
@@ -34,5 +50,9 @@ data class DepthKeeper(val timer: TimerHomie) {
 
     fun getNextState(): FutureRoundState {
         return currentLevel[activeIndex++]
+    }
+
+    fun noMoreFutureStates(): Boolean {
+        return nextLevel.isEmpty()
     }
 }

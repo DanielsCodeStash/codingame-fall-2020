@@ -34,11 +34,11 @@ data class Inventory(
                 tier3 + spell.delta3
         )
 
-        if(getTierNums().any { newInventory.getNumOfTier(it) < 0 }) {
-            throw RuntimeException("Faulty spellcast! $spell $this")
-        }
-
         return newInventory
+    }
+
+    fun getTotalSize(): Int {
+        return getTierNums().map { getNumOfTier(it) }.sum()
     }
 
     fun getInventoryAfterBrewing(brew: Brew): Inventory {

@@ -15,7 +15,7 @@ class TimerHomie(private val maxTime: Int) {
     fun thereIsTimeLeftForSearching(): Boolean {
 
         // for performance reasons we only really respond to evey 100 calls
-        if(graceQuestions < 100) {
+        if(graceQuestions < 10) {
             graceQuestions++
             return true
         }
