@@ -7,7 +7,8 @@ data class Spell(
         val delta2: Int,
         val delta3: Int,
         val isExhausted: Boolean,
-        val repeatable: Boolean
+        val repeatable: Boolean,
+        val cameFromTome: Boolean = false
 ) {
     fun deltaForTier(tier: Int): Int {
         when(tier) {

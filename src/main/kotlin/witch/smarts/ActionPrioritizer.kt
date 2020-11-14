@@ -1,43 +1,58 @@
 package witch.smarts
 
+import witch.container.ActionType
 import witch.container.FutureRoundState
 import witch.util.TimerHomie
+import kotlin.math.roundToInt
 
 class ActionPrioritizer(timer: TimerHomie) {
 
-    private val visitedStates = emptySet<String>()
-
     fun calculateStateScore(state: FutureRoundState): Int {
-
-        if(visitedStates.contains(getStateHash(state)))
-            return -100
 
         var score = 0
         val inventory = state.roundState.me.inventory
 
-        score += inventory.getNumOfTier(0) * 2
+        score += inventory.getNumOfTier(0) * 1
         score += inventory.getNumOfTier(1) * 4
         score += inventory.getNumOfTier(2) * 6
         score += inventory.getNumOfTier(3) * 8
 
-        score += state.roundState.me.score * 10
+        score += state.roundState.me.score * 15
 
         score += state.roundState.me.spells.filter { !it.isExhausted }.count()
+
+        score += pathRatingScore(state)
 
         return score
     }
 
-    private fun getStateHash(state: FutureRoundState): String {
-        val inventory = state.roundState.me.inventory
-        val spells = state.roundState.me.spells
+    private fun pathRatingScore(state: FutureRoundState): Int {
 
-        val inventoryStatus =  "${inventory.tier0}${inventory.tier1}${inventory.tier2}${inventory.tier3}"
-        val spellStatus = spells
-                .map { it.isExhausted }
-                .joinToString()
+        var score = 0
 
-        return "$inventoryStatus$spellStatus"
+        var likelihoodsTomeIsGone = 0
+        for(i in state.path.indices) {
+            if(state.path[i].verb == ActionType.LEARN) {
+                likelihoodsTomeIsGone += i * 1
+            }
+        }
+        score -= likelihoodsTomeIsGone
+
+
+        var likelihoodsBrewIsGone = 0
+        for(i in state.path.indices) {
+            if(state.path[i].verb == ActionType.BREW) {
+                likelihoodsBrewIsGone += i * 1
+            }
+        }
+        score -= likelihoodsBrewIsGone
+
+
+
+        return score
     }
+
+
 
 
 }

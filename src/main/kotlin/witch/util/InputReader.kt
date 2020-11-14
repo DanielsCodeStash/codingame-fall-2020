@@ -30,11 +30,12 @@ fun readRoundState(input: Scanner, roundNum: Int) : RoundState {
         var spell: Spell? = null
 
         when(actionType) {
-            "CAST", "OPPONENT_CAST", "LEARN" -> spell = Spell(actionId, delta0, delta1, delta2, delta3, !castable, repeatable)
+            "CAST", "OPPONENT_CAST" -> spell = Spell(actionId, delta0, delta1, delta2, delta3, !castable, repeatable)
+            "LEARN" -> spell = Spell(actionId, delta0, delta1, delta2, delta3, !castable, repeatable, true)
         }
 
         when(actionType) {
-            "BREW" -> brews.add(Brew(actionId, delta0*-1, delta1*-1, delta2*-1, delta3*-1, price))
+            "BREW" -> brews.add(Brew(actionId, delta0*-1, delta1*-1, delta2*-1, delta3*-1, price+tomeIndex))
             "CAST" -> mySpells.add(spell!!)
             "OPPONENT_CAST " -> mySpells.add(spell!!)
             "LEARN" -> tomes.add(Tome(spell!!, tomeIndex, taxCount))

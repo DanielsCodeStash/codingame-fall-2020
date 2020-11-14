@@ -6,7 +6,7 @@ class TimerHomie(private val maxTime: Int) {
 
 
 
-    private val searchCutoff = if(maxTime > 100) 100 else 10
+    private val searchCutoff = if(maxTime > 100) 100 else 5
 
 
     private var graceQuestions = 0
