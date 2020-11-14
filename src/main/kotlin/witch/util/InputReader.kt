@@ -37,7 +37,7 @@ fun readRoundState(input: Scanner, roundNum: Int) : RoundState {
         when(actionType) {
             "BREW" -> brews.add(Brew(actionId, delta0*-1, delta1*-1, delta2*-1, delta3*-1, price+tomeIndex))
             "CAST" -> mySpells.add(spell!!)
-            "OPPONENT_CAST " -> mySpells.add(spell!!)
+            "OPPONENT_CAST " -> enemySpells.add(spell!!)
             "LEARN" -> tomes.add(Tome(spell!!, tomeIndex, taxCount))
         }
     }
