@@ -4,10 +4,7 @@ import java.util.*
 
 class TimerHomie(private val maxTime: Int) {
 
-
-
-    private val searchCutoff = if(maxTime > 100) 100 else 5
-
+    private val searchCutoff = if(maxTime > 100) 200 else 5
 
     private var graceQuestions = 0
     private val startTime = Date().time

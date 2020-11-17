@@ -7,11 +7,11 @@ import witch.container.RoundState
 import witch.util.InfoKeeper
 import witch.util.TimerHomie
 
-class BrewSearch(private val timer: TimerHomie, info: InfoKeeper) {
+class BrewSearch(private val timer: TimerHomie, info: InfoKeeper, val startRound: Int) {
 
     // smarts
     private val simulator = BrewSimulator(timer)
-    private val prioritizer = ActionPrioritizer(timer)
+    private val prioritizer = ActionPrioritizer(timer, this)
     private val resultKeeper = ResultKeeper(timer)
     private val dataKeeper = DepthKeeper(timer, info)
 
@@ -43,7 +43,6 @@ class BrewSearch(private val timer: TimerHomie, info: InfoKeeper) {
 
         // assess how much we like this node, anything below zero and we ignore this branch
         state.score = prioritizer.calculateStateScore(state)
-        if(state.score < 0) return
 
         //debugPrintOut(state)
 
@@ -59,21 +58,5 @@ class BrewSearch(private val timer: TimerHomie, info: InfoKeeper) {
                 .forEach { dataKeeper.queueFutureState(it) }
     }
 
-
-    private fun debugPrintOut(state: FutureRoundState) {
-        return
-
-        var out = state.path.joinToString(" ") { it.debugString() }
-        System.err.println(out)
-
-        return
-        if(state.roundState.round > 2 && state.path[0].verb == ActionType.LEARN && state.path[1].thing == state.path[0].thing) {
-
-            var out = state.path.joinToString(" ") { it.debugString() }
-            out += " => score ${state.score} "
-            out += state.roundState.debugString()
-            System.err.println(out)
-        }
-    }
 
 }

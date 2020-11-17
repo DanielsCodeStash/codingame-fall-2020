@@ -6,7 +6,8 @@ import witch.util.TimerHomie
 
 data class DepthKeeper(val timer: TimerHomie, val info: InfoKeeper) {
 
-    private val maxCandidatesPerLevel = 200
+    private val maxCandidatesPerLevel = 300
+    private val maxDepth = 7
 
     private var activeLevel = 0
     private var activeIndex = 0
@@ -53,6 +54,9 @@ data class DepthKeeper(val timer: TimerHomie, val info: InfoKeeper) {
     }
 
     fun noMoreFutureStates(): Boolean {
+        if(activeLevel > maxDepth)
+            return true
+
         return nextLevel.isEmpty()
     }
 }

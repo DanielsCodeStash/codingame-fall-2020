@@ -3,9 +3,10 @@ package witch.smarts
 import witch.container.ActionType
 import witch.container.FutureRoundState
 import witch.util.TimerHomie
+import kotlin.math.max
 import kotlin.math.roundToInt
 
-class ActionPrioritizer(timer: TimerHomie) {
+class ActionPrioritizer(timer: TimerHomie, private val brewSearch: BrewSearch) {
 
     fun calculateStateScore(state: FutureRoundState): Int {
 
@@ -13,9 +14,9 @@ class ActionPrioritizer(timer: TimerHomie) {
         val inventory = state.roundState.me.inventory
 
         score += inventory.getNumOfTier(0) * 1
-        score += inventory.getNumOfTier(1) * 4
-        score += inventory.getNumOfTier(2) * 6
-        score += inventory.getNumOfTier(3) * 8
+        score += inventory.getNumOfTier(1) * 2
+        score += inventory.getNumOfTier(2) * 3
+        score += inventory.getNumOfTier(3) * 4
 
         score += state.roundState.me.score * 15
 
@@ -30,24 +31,25 @@ class ActionPrioritizer(timer: TimerHomie) {
 
         var score = 0
 
-        var likelihoodsTomeIsGone = 0
+        val baseValueOfLearn = max(5-brewSearch.startRound, 0)
+        var learnEarlyScore = 0
         for(i in state.path.indices) {
             if(state.path[i].verb == ActionType.LEARN) {
-                likelihoodsTomeIsGone += i * 1
+
+                learnEarlyScore += baseValueOfLearn + ((15.0-state.roundState.me.spells.count()) / (i+1) ).roundToInt()
             }
         }
-        score -= likelihoodsTomeIsGone
+        score += learnEarlyScore
 
-
-        var likelihoodsBrewIsGone = 0
+        val baseValueOfBrew = brewSearch.startRound
+        var brewEarlyScore = 0
         for(i in state.path.indices) {
             if(state.path[i].verb == ActionType.BREW) {
-                likelihoodsBrewIsGone += i * 1
+
+                brewEarlyScore += baseValueOfBrew + (100.0 / (i+1) ).roundToInt()
             }
         }
-        score -= likelihoodsBrewIsGone
-
-
+        score += brewEarlyScore
 
         return score
     }

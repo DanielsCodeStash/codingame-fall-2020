@@ -18,11 +18,11 @@ fun main() {
         val roundState = readRoundState(input, roundNum)
 
         // init our workers
-        val timer = TimerHomie(if(roundNum == 0) 1000 else 50)
+        val timer = TimerHomie(if(roundNum == 0) 100 else 50)
         val info = InfoKeeper(timer)
 
         // find best action
-        val smartSearch = BrewSearch(timer, info)
+        val smartSearch = BrewSearch(timer, info, roundNum)
         val nextAction = smartSearch.findNextAction(roundState)
 
         // output round info and action
