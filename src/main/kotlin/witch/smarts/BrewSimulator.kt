@@ -74,12 +74,14 @@ class BrewSimulator(timer: TimerHomie) {
 
         val newInventory = state.roundState.me.inventory.getInventoryAfterSpellCast(spell, timesToCast)
 
-        val newSpellList = if(spell.cameFromTome) {
-            state.roundState.me.spells.filter { it.id != spell.id }
-        } else {
-            val newSpell = spell.copy(isExhausted = true)
-            listOf(state.roundState.me.spells.filter { it.id != spell.id }, listOf(newSpell)).flatten()
-        }
+        val newSpellList = state.roundState.me.spells
+                .map {
+                    if(it.id == spell.id) {
+                        it.copy(isExhausted = true)
+                    } else {
+                        it.copy()
+                    }}
+
 
         val newMe = state.roundState.me.copy(inventory = newInventory, spells = newSpellList)
 
